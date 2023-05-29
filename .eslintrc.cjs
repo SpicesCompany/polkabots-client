@@ -1,11 +1,15 @@
+// eslint-disable-next-line no-undef
 module.exports = {
-	extends: ['plugin:astro/recommended'],
 	env: { browser: true, es2020: true },
 	extends: [
+		'@feature-sliced/eslint-config/rules/public-api',
+		'@feature-sliced/eslint-config/rules/layers-slices',
 		'eslint:recommended',
+		'eslint-config-prettier',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:react-hooks/recommended',
 		'plugin:prettier/recommended',
+		'plugin:astro/recommended',
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
@@ -22,13 +26,18 @@ module.exports = {
 				endOfLine: 'auto',
 			},
 		],
-		'@typescript-eslint/no-empty-interface': 'off',
+		'no-undef': 'error',
 		'no-multiple-empty-lines': 'error',
 	},
-	plugins: ['prettier'],
+	plugins: ['eslint-plugin-prettier'],
 	settings: {
 		react: {
 			version: 'detect',
+		},
+		'import/resolver': {
+			typescript: {
+				alwaysTryTypes: true,
+			},
 		},
 	},
 	overrides: [
@@ -38,6 +47,22 @@ module.exports = {
 			parserOptions: {
 				parser: '@typescript-eslint/parser',
 				extraFileExtensions: ['.astro'],
+			},
+		},
+		{
+			files: '**/*.+(ts|tsx)',
+			plugins: ['@typescript-eslint/eslint-plugin'],
+			extends: [
+				'eslint:recommended',
+				'plugin:@typescript-eslint/recommended',
+				'plugin:react-hooks/recommended',
+			],
+			parser: '@typescript-eslint/parser',
+			rules: {
+				'@typescript-eslint/no-empty-interface': 'error',
+			},
+			parserOptions: {
+				project: './tsconfig.json',
 			},
 		},
 	],
